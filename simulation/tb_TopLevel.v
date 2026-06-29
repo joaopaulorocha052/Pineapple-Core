@@ -42,13 +42,23 @@ module tb_TopLevel;
         V_SW[0] = 1'b1;
     end
 
+    integer i;
+    integer INPUT_ARRAY [0:10];
+    initial i = 0;
+
+    initial begin
+        INPUT_ARRAY[0] = 72;
+        INPUT_ARRAY[1] = 16;
+    end
        // controle_de_entradas
     always @(posedge tb_TopLevel.DUT.IoModule.halt_flag) begin
-        V_SW[3:9] = 7'd6;
+        V_SW[3:9] = INPUT_ARRAY[i];
         #20
         V_SW[2] = 1'b1;
-        #20
+        #50
         V_SW[2] = 1'b0;
+
+        i = i + 1;
     end
 
     always @(teste_apocal or G_LEDR or sp_test or fp_test) begin
