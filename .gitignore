@@ -1,0 +1,8 @@
+/db/*
+/synth/*
+/simulation/modelsim/*
+/incremental_db/*
+
+*.rpt
+*.qpf
+*.qsf
