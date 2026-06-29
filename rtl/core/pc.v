@@ -13,26 +13,26 @@ output reg [8:0] destino_instrucao;
 output [31:0] jal_current_inst;
 input clock, reset;
 
-assign jal_current_inst = {24'b0, destino_instrucao} + 32'd1;
+assign jal_current_inst = {23'b0, destino_instrucao} + 32'd1;
 
 always @ (posedge clock or posedge reset) begin
       if (reset) begin
 
-        destino_instrucao <= 8'b0;
+        destino_instrucao <= 9'b0;
 
       end else begin
 
         case (tipo)
-            5'b00000: destino_instrucao <= destino_instrucao + 1; //Tipo R e I
-          5'b01010: destino_instrucao <= destino_instrucao + 1; //Tipo R e I
-          5'b01011: destino_instrucao <= destino_instrucao + 1; //Tipo R e I
-          5'b00110: destino_instrucao <= destino_instrucao + 1; //Tipo R e I
-          5'b00101: destino_instrucao <= destino_instrucao + 1; //LW -- antes caia no default, agora explicito
+            5'b00000: destino_instrucao <= destino_instrucao + 9'b1; //Tipo R e I
+          5'b01010: destino_instrucao <= destino_instrucao + 9'b1; //Tipo R e I
+          5'b01011: destino_instrucao <= destino_instrucao + 9'b1; //Tipo R e I
+          5'b00110: destino_instrucao <= destino_instrucao + 9'b1; //Tipo R e I
+          5'b00101: destino_instrucao <= destino_instrucao + 9'b1; //LW -- antes caia no default, agora explicito
           5'b00001: destino_instrucao <=  end_jump; //Tipo J - end (JUMP comum E JR, ver unidade_de_controle.v: JR usa instr_type=5'b00001 tambem -- end_jump aqui ja recebe wjump_val, que o Processador.v ja seleciona corretamente entre o imediato e ula_1 via wis_jr)
           5'b00011: destino_instrucao <= end_jump; //BEQ caso seja igual
           5'b11111: destino_instrucao <= destino_instrucao;
 			 5'b00100: destino_instrucao <= end_jump;
-          default: destino_instrucao <= destino_instrucao + 1; //Tipo R
+          default: destino_instrucao <= destino_instrucao + 9'b1; //Tipo R
         endcase  
           
       end

@@ -76,12 +76,6 @@ output reg [15:0] extended_immediate;
 					src1 =6'b0;
 					src2 =6'b0;
 					shiftAmnt =6'b0;
-					// CORRECAO: era dest=6'd24, mas todo o compilador
-					// (asm_gen.h: RETURN_ADDRESS_POINTER=31) e o assembly
-					// gerado (SW RA,FP(1) apos o JAL) esperam que o
-					// endereco de retorno seja gravado em R31 (RA), nao
-					// em R24 -- ninguem nunca lia R24 de volta, entao RA
-					// ficava sempre no valor de reset (0).
 					dest =6'd31;
 					instr_type =6'b000100;
 					reg_write =1'b1;
@@ -191,6 +185,7 @@ output reg [15:0] extended_immediate;
 					end_jump =5'b0;
 					i_jump =5'b0;
 					sign_extend=1'b0;
+					extended_immediate=instrucao[15:0];
 					ram_write = 1'b0;
 					mem_to_reg = 1'b0;
 					is_jal = 1'b0;
