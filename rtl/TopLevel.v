@@ -7,10 +7,10 @@ module TopLevel (
     output [6:0] HEX1,
     output [6:0] HEX2,
     output [6:0] HEX3,
-    output [6:0] HEX4,
-	 output [31:0] sp_test,
-	 output [31:0] fp_test,
-	 output [31:0] mem_test
+    output [6:0] HEX4//,
+	//  output [31:0] sp_test,
+	//  output [31:0] fp_test,
+	//  output [31:0] mem_test
 );
 
 
@@ -47,9 +47,9 @@ module TopLevel (
                      .output_value(_output),
                      .reset_config_flag(_reset_config_flag),
                      .teste_end(_teste_end),
-                     .input_debug(G_LEDR[0:5]),
-							.sp_test(sp_test),
-							.fp_test(fp_test)
+                     .input_debug(G_LEDR[0:5])//,
+							// .sp_test(sp_test),
+							// .fp_test(fp_test)
                      );
     Binary_to_BCD bin2bcd(.bin(_output), .bcd(_bcd)); // se n funcionar trocar para _output
     seven_segments seg1(.in(_bcd[3:0]), .segmentos(_hex1));

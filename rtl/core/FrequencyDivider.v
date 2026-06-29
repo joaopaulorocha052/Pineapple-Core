@@ -5,7 +5,7 @@ module FrequencyDivider(
     
     always @ (posedge in_clk)begin
         if(en)begin
-          //if (OUT == 26'd10000000) 
+        //   if (OUT == 26'd5000000) 
 	  if ( OUT == 26'd1)
                 begin
                     OUT<= 26'd0;

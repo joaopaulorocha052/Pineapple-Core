@@ -21,10 +21,7 @@ module tb_TopLevel;
         .HEX1(HEX1),
         .HEX2(HEX2),
         .HEX3(HEX3),
-        .HEX4(HEX4),
-        .sp_test(sp_test),
-        .fp_test(fp_test),
-        .mem_test(mem_test)
+        .HEX4(HEX4)
     );
 
 
@@ -47,8 +44,8 @@ module tb_TopLevel;
     initial i = 0;
 
     initial begin
-        INPUT_ARRAY[0] = 72;
-        INPUT_ARRAY[1] = 16;
+        INPUT_ARRAY[0] = 4;
+        INPUT_ARRAY[1] = 2;
     end
        // controle_de_entradas
     always @(posedge tb_TopLevel.DUT.IoModule.halt_flag) begin
