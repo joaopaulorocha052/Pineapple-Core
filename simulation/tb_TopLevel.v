@@ -44,8 +44,19 @@ module tb_TopLevel;
     initial i = 0;
 
     initial begin
-        INPUT_ARRAY[0] = 4;
-        INPUT_ARRAY[1] = 2;
+        INPUT_ARRAY[0] = 16;
+        INPUT_ARRAY[1] = 64;
+        INPUT_ARRAY[2] = 42;
+        INPUT_ARRAY[3] = 69;
+        INPUT_ARRAY[4] = 42;
+        INPUT_ARRAY[5] = 1;
+        INPUT_ARRAY[6] = 3;
+        INPUT_ARRAY[7] = 5;
+        INPUT_ARRAY[8] = 89;
+        INPUT_ARRAY[9] = 9;
+
+
+
     end
        // controle_de_entradas
     always @(posedge tb_TopLevel.DUT.IoModule.halt_flag) begin
@@ -64,7 +75,7 @@ module tb_TopLevel;
     end
 
     initial begin
-        #50000; // 50us
+        #500000; // 50us
         $stop;
     end
 
