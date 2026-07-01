@@ -5,11 +5,11 @@ module Processador (CLOCK_50, _mem_clock,teste, reset, halt_flag, reset_config_f
 wire [31:0] _mem_output;
 input _mem_clock;
 wire clk, div_clock;
-wire [8:0] end_instrucao;
+wire [9:0] end_instrucao;
 wire [31:0] wjal_current_inst;
 wire [31:0] instrucao, ULA_result, ula_1, ula_2, wim, wim_ex, wula_im;
 wire [4:0] type, wselect, wdest, wsrc1, wsrc2, wshift, wi_jump, wsign_extend, wtype;
-wire [8:0] wend_jump;
+wire [9:0] wend_jump;
 input CLOCK_50, reset, halt_flag, reset_config_flag;
 input [31:0] input_value;
 output [31:0] output_value, config_value, teste, input_debug, teste_apocal, sp_test, fp_test;
@@ -54,7 +54,7 @@ multiplexer2 halt_check(.in1(wpc_mult_select),
 wire wis_jr;
 assign wis_jr = (instrucao[31:26] == 5'b00010) ?  1'b1 : 1'b0;
 
-wire [8:0] wjump_val;
+wire [9:0] wjump_val;
 
 multiplexer2 reg_or_im(
 								.in1(wend_jump),
