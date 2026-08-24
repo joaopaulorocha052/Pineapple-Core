@@ -3,7 +3,7 @@
 module tb_TopLevel;
 
     reg CLOCK_50;
-    reg [0:9] V_SW;
+    reg [0:10] V_SW;
 
     wire [0:9] G_LEDR;
     wire [0:8] G_LEDG;
@@ -31,7 +31,13 @@ module tb_TopLevel;
     initial begin
         V_SW = 10'b0000000000;
         V_SW[0] = 1'b0;   // habilita o FrequencyDivider desde o tempo 0
+        #10
         V_SW[1] = 1'b1;   // reset ATIVO inicialmente
+        V_SW[10] = 1'b0;
+        #10
+        V_SW[10] = 1'b1;
+        #10
+        V_SW[10] = 1'b0;
 
         #100;             // mantem reset por 100ns (5 periodos de CLOCK_50)
         V_SW[1] = 1'b0;   // libera o reset -- processador comeca a executar
