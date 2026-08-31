@@ -23,7 +23,7 @@ module TopLevel (
      `ifdef DEBUG_MODE
         FrequencyDivider #(.FREQ_HZ(100)) fdiv (.in_clk(CLOCK_50), .out_clk(_clk), .en(V_SW[0]));
     `else
-        FrequencyDivider #(.FREQ_HZ(1000)) fdiv (.in_clk(CLOCK_50), .out_clk(_clk), .en(V_SW[0]));
+        FrequencyDivider #(.FREQ_HZ(100)) fdiv (.in_clk(CLOCK_50), .out_clk(_clk), .en(V_SW[0]));
     `endif
 
 
