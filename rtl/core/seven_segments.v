@@ -12,7 +12,7 @@ module seven_segments(input[3:0] in, output reg [0:6] segmentos);
             4'b0111: segmentos=7'b1111000;
             4'b1000: segmentos=7'b0000000;
             4'b1001: segmentos=7'b0010000;
-            default: segmentos = 7'b1111111;
+            default: segmentos = 7'b0111111;
         endcase
     
     end
