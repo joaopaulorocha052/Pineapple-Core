@@ -26,32 +26,27 @@ module IO (
   
   //seven_segments seven (.input_value(output_value), );
 wire _hex, _led;
-reg [31:0] prev_output;
+reg previous_enter_value;
+
     always @(posedge clk or posedge reset) begin
         
         if (reset) begin
-            halt_flag <= 1'b0;
-				prev_output <= 32'b0;
+            halt_flag = 1'b0;
+            previous_enter_value <= 1'b0;
         end else begin
-				prev_output <= output_value_register;
-				if (output_value_register != prev_output) begin
-                halt_flag <= 1'b1;
-            end
+
+            previous_enter_value <= enter;
             if (io_config[1] == 1'b1) begin
-                halt_flag <=  1'b1;
+                halt_flag =  1'b1;
             end
-            if(enter)begin
-                halt_flag <= 1'b0;
+            if(enter && !previous_enter_value)begin
+                halt_flag = 1'b0;
             end
         end
         
         
 
     end
-
-
-	assign output_value = output_value_register;
-
-    
+    assign output_value = output_value_register;
 
 endmodule
