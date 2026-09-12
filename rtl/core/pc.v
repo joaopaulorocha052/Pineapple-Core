@@ -4,7 +4,7 @@ module pc (end_jump, i_jump, tipo, destino_instrucao, clock, reset, jal_current_
 
 input  [4:0] i_jump, tipo;
 input [9:0] end_jump;
-output reg [8:0] destino_instrucao; 
+output reg [9:0] destino_instrucao; 
 // REIMPLEMENTACAO DO JAL: jal_current_inst agora e nativamente 32 bits,
 // em vez de [7:0]. Antes, esse wire de 8 bits alimentava uma porta de
 // 32 bits do multiplexer2 (jal_or_registers em Processador.v), exigindo

@@ -1,6 +1,6 @@
 module memoria_instrucao_arquivo 
 #(
-	parameter ADDRESS_WIDTH=9
+	parameter ADDRESS_WIDTH=10
 )(
     clk, endereco, saida, reset
 );  

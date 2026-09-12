@@ -49,13 +49,20 @@ module tb_TopLevel;
     end
 
     integer i;
-    integer INPUT_ARRAY [0:2];
-    initial i = -1;
+    integer INPUT_ARRAY [0:9];
+    initial i = 0;
 
     initial begin
-        INPUT_ARRAY[0] = 1;
-        INPUT_ARRAY[1] = 2;
-        INPUT_ARRAY[2] = 3;
+        INPUT_ARRAY[0] = 5;
+	INPUT_ARRAY[1] = 2;
+	INPUT_ARRAY[2] = 10;
+	INPUT_ARRAY[3] = 4;
+	INPUT_ARRAY[4] = 3;
+	INPUT_ARRAY[5] = 1;
+	INPUT_ARRAY[6] = 6;
+	INPUT_ARRAY[7] = 8;
+	INPUT_ARRAY[8] = 9;
+	INPUT_ARRAY[9] = 7;
     end
 
         // initial begin
@@ -96,13 +103,13 @@ module tb_TopLevel;
         i = i + 1;
     end
 
-    always @(teste_apocal or G_LEDR or sp_test or fp_test) begin
-        $display("%8t |   %b   |             %d              |        %d           |   %d   |   %d",
-                  $time, V_SW[1], teste_apocal, G_LEDR[6:9], sp_test, fp_test);
+    always @(G_LEDG) begin
+        $display("%8t|   %d",
+                  $time, {G_LEDG[0], G_LEDG[1], G_LEDG[2], G_LEDG[3], G_LEDG[4], G_LEDG[5], G_LEDG[6]});
     end
 
     initial begin
-        #500000; // 50us
+        #100000; // 50us
         $stop;
     end
 
