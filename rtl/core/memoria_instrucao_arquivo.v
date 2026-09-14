@@ -1,6 +1,6 @@
 module memoria_instrucao_arquivo 
 #(
-	parameter ADDRESS_WIDTH=10
+	parameter ADDRESS_WIDTH=8
 )(
     clk, endereco, saida, reset
 );  
@@ -8,8 +8,7 @@ module memoria_instrucao_arquivo
     input [ADDRESS_WIDTH-1:0] endereco;
     output [31:0] saida;
     // aumentar o número de instruções
-    reg [31:0] instrucoes [2**(ADDRESS_WIDTH-1):0];
-	
+    reg [31:0] instrucoes [2**ADDRESS_WIDTH-1:0];
 		initial begin
 		
 			$readmemb("init.txt", instrucoes);

@@ -23,7 +23,7 @@ module TopLevel (
      `ifdef DEBUG_MODE
         FrequencyDivider #(.FREQ_HZ(100)) fdiv (.in_clk(CLOCK_50), .out_clk(_clk), .en(V_SW[0]));
     `else
-        FrequencyDivider #(.FREQ_HZ(100)) fdiv (.in_clk(CLOCK_50), .out_clk(_clk), .en(V_SW[0]));
+        FrequencyDivider #(.FREQ_HZ(50_000_000)) fdiv (.in_clk(CLOCK_50), .out_clk(_clk), .en(V_SW[0]));
     `endif
 
 
@@ -42,7 +42,8 @@ module TopLevel (
                   .reset_config_flag(_reset_config_flag)
                   );
    SignExtend extends_input_value(.imediato(V_SW[3:9]), .imediato_extendido(_extended_input));
-   
+
+
 
     Processador CPU (.CLOCK_50(_clk), 
                      ._mem_clock(CLOCK_50), 
@@ -53,9 +54,7 @@ module TopLevel (
                      .output_value(_output),
                      .reset_config_flag(_reset_config_flag),
                      .teste_end(_teste_end),
-                     .input_debug(G_LEDR[0:5])//,
-							// .sp_test(sp_test),
-							// .fp_test(fp_test)
+                     .input_debug(G_LEDR[0:5])
                      );
 
     wire[9:0] lcd_instruction;

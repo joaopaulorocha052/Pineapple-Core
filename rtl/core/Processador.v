@@ -14,8 +14,19 @@ input CLOCK_50, reset, halt_flag, reset_config_flag;
 input [31:0] input_value;
 output [31:0] output_value, config_value, teste, input_debug, teste_apocal, sp_test, fp_test;
 wire wreg_write, wram_write, _mem_to_reg, wis_jal;
-output [8:0] teste_end;
+output [9:0] teste_end;
 
+
+
+wire [8:0] fetch_local_addr;
+wire [31:0] bios_instruction, iram_instruction;
+
+addr_decoder fetch_instr_decoder(.instr_address(end_instrucao),
+                                .bios_instr(bios_instruction),
+                                .iram_instr(iram_instruction),
+                                .local_addr(fetch_local_addr),
+                                .fetch_instr(instrucao)
+                                );
 
 unidade_de_controle control(.instrucao(instrucao), 
                             .reg_write(wreg_write), 
@@ -31,7 +42,7 @@ unidade_de_controle control(.instrucao(instrucao),
                             .extended_immediate(wim),
                             .ram_write(wram_write),
                             .mem_to_reg(_mem_to_reg),
-									 .is_jal(wis_jal)
+							.is_jal(wis_jal)
                             );
 // TODO: revisar essa parte
 wire [4:0]wpc_mult_select;
@@ -70,17 +81,22 @@ pc pc(.end_jump(wjump_val),
         .reset(reset),
 		  .jal_current_inst(wjal_current_inst));
 		  
+bios_rom u_bios (.addr(fetch_local_addr),
+                .clk(CLOCK_50),
+                .q(bios_instruction)
+                );
+   
+memoria_ram u_iram #(.ADDR_WIDTH(8))(.data(ula_2),
+                .read_addr(ULA_result),
+                .write_addr(ULA_result),
+                .we(),
+                .read_clock(_mem_clock),
+                .write_clock(CLOCK_50),
+                .q(_mem_output)
+                );
+memoria_instrucao_arquivo mem_instr (.clk(CLOCK_50), .endereco(fetch_local_addr), .saida(iram_instruction), .reset(reset));
 
 
-memoria_instrucao_arquivo mem_instr (.clk(CLOCK_50), .endereco(end_instrucao), .saida(instrucao), .reset(reset));
-
-// REIMPLEMENTACAO DO JAL: antes, dois multiplexer2 em cascata decidiam
-// o valor final escrito no banco de registradores (ULA-vs-memoria,
-// depois isso-vs-JAL) -- dois estagios combinacionais em serie. Agora
-// um unico multiplexer3 resolve as 3 possibilidades de uma vez,
-// reduzindo a profundidade logica e centralizando a decisao num so
-// lugar. wis_jal tem prioridade sobre _mem_to_reg (JAL nunca le
-// memoria, entao essa prioridade nunca causa ambiguidade real).
 wire [2:0] wfinal_select;
 assign wfinal_select = wis_jal ? 3'b010 : (_mem_to_reg ? 3'b001 : 3'b000);
 
@@ -105,8 +121,8 @@ registradores registradores(.src1(wsrc1), //1
                             .output_value(output_value), 
                             .config_value(config_value),
                             .input_debug(input_debug),
-									 .sp(sp_test),
-									 .fp(fp_test)
+							.sp(sp_test),
+							.fp(fp_test)
                             );
 									 
 
