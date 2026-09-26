@@ -23,7 +23,7 @@ module TopLevel (
      `ifdef DEBUG_MODE
         FrequencyDivider #(.FREQ_HZ(100)) fdiv (.in_clk(CLOCK_50), .out_clk(_clk), .en(V_SW[0]));
     `else
-        FrequencyDivider #(.FREQ_HZ(50_000_000)) fdiv (.in_clk(CLOCK_50), .out_clk(_clk), .en(V_SW[0]));
+        FrequencyDivider #(.FREQ_HZ(1000)) fdiv (.in_clk(CLOCK_50), .out_clk(_clk), .en(V_SW[0]));
     `endif
 
 
@@ -59,7 +59,7 @@ module TopLevel (
 
     wire[9:0] lcd_instruction;
     wire enable_lcd;
-    LCD_CONTROLLER lcd(.clk(_lcd_clock), .reset(V_SW[10]), .input_data(_extended_input), .output_data(_bcd), .en(enable_lcd), .lcd_instruction_bus(lcd_instruction));
+    LCD_CONTROLLER lcd(.clk(CLOCK_50), .reset(V_SW[10]), .input_data(_extended_input), .output_data(_bcd), .en(enable_lcd), .lcd_instruction_bus(lcd_instruction));
     // Mapeamento corrigido baseado na nova pinagem de 14 bits:
     assign LCD_BUS = {
         1'b1,                  // LCD_BUS[12] -> L6 (Luz acesa)
