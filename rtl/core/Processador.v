@@ -80,20 +80,12 @@ pc pc(.end_jump(wjump_val),
 		.clock(CLOCK_50),
         .reset(reset),
 		  .jal_current_inst(wjal_current_inst));
-		  
+		   
 bios_rom u_bios (.addr(fetch_local_addr),
-                .clk(CLOCK_50),
+                .clk(~CLOCK_50),
                 .q(bios_instruction)
                 );
    
-memoria_ram u_iram #(.ADDR_WIDTH(8))(.data(ula_2),
-                .read_addr(ULA_result),
-                .write_addr(ULA_result),
-                .we(),
-                .read_clock(_mem_clock),
-                .write_clock(CLOCK_50),
-                .q(_mem_output)
-                );
 memoria_instrucao_arquivo mem_instr (.clk(CLOCK_50), .endereco(fetch_local_addr), .saida(iram_instruction), .reset(reset));
 
 
