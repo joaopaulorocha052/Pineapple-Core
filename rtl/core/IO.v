@@ -1,18 +1,3 @@
-/*************************************** IO ***********************************************
-
-                Registers 33 and 32 store input and output values
-                Register 34 stores IO configs
-                The 8 bits in io_config register refer to IO settings
-                Bits:
-                    0 -----> Turns output ON/OFF
-                    1 -----> Turns Input ON/OFF 
-                    2 -----> Sets output as LEDs
-                    3 -----> Sets output as 7 Segments Display
-                    4...7 -> To be implemented(LCD, keyboard)
-
-*************************************** IO ***********************************************/
-
-
 module IO (
     input [31:0] output_value_register,
     input [31:0] io_config,
@@ -21,32 +6,39 @@ module IO (
     output [31:0] output_value,
     output reg [31:0] input_value_register,
     output reg halt_flag, reset_config_flag
-    //output [28:0] hex
 );
-  
-  //seven_segments seven (.input_value(output_value), );
-wire _hex, _led;
-reg previous_enter_value;
+
+    reg previous_enter_value;
+    reg input_done;
 
     always @(posedge clk or posedge reset) begin
-        
         if (reset) begin
-            halt_flag = 1'b0;
+            halt_flag <= 1'b0;
             previous_enter_value <= 1'b0;
+            input_value_register <= 32'b0;
+            input_done <= 1'b0;
         end else begin
-
             previous_enter_value <= enter;
-            if (io_config[1] == 1'b1) begin
-                halt_flag =  1'b1;
+
+            // Quando a configuracao de entrada e desativada, reseta o estado de leitura
+            if (io_config[1] == 1'b0) begin
+                halt_flag <= 1'b0;
+                input_done <= 1'b0;
+            end 
+            // Se a entrada esta ativada e ainda nao foi lida, solicita a pausa (halt)
+            else if (io_config[1] == 1'b1 && !input_done) begin
+                halt_flag <= 1'b1;
             end
-            if(enter && !previous_enter_value)begin
-                halt_flag = 1'b0;
+
+            // Ao detetar a borda de subida do enter, captura o valor e libera a CPU
+            if (enter && !previous_enter_value) begin
+                halt_flag <= 1'b0;
+                input_value_register <= input_value;
+                input_done <= 1'b1; // Marca a leitura como concluida
             end
         end
-        
-        
-
     end
+
     assign output_value = output_value_register;
 
 endmodule
