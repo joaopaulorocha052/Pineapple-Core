@@ -18,6 +18,9 @@ module Processador (CLOCK_50, _mem_clock,teste, reset, halt_flag, reset_config_f
 localparam [31:0] IRAM_END  = 32'h0000_0200; // primeiro endereco apos a iram
 localparam [31:0] DRAM_BASE = 32'h0000_0300;
 localparam [31:0] DRAM_END  = 32'h0000_0500; // primeiro endereco apos a dram
+localparam [31:0] HDD_BASE  = 32'h0000_0600; // primeiro endereco apos a dram
+localparam [31:0] HDD_END  = 32'h0000_0A00; // primeiro endereco apos a dram
+
 
 wire [31:0] _mem_output;
 input _mem_clock;
@@ -98,10 +101,25 @@ pc pc(.end_jump(wjump_val),
         .reset(reset),
 		  .jal_current_inst(wjal_current_inst));
 		   
-bios_rom u_bios (.addr(fetch_local_addr),
+rom u_bios (.addr(fetch_local_addr),
                 .clk(~CLOCK_50),
                 .q(bios_instruction)
                 );
+
+wire [31:0] rom_output, rom_offset, mem_or_rom_data;
+
+assign rom_offset = ULA_result - HDD_BASE;
+
+rom #(.ADDR_WIDTH(10), .MIF_FILE_PATH("HD.mif")) u_hd (
+                                                    .addr(rom_offset),
+                                                    .clk(CLOCK_50),
+                                                    .q(rom_output)
+                                                        );
+
+// Mais magia de enderecos aqui - Preciso arrumar essa porcaria
+wire rom_load;
+assign rom_load = (ULA_result >= HDD_BASE ) && (ULA_result < HDD_END);
+
 
 /************************ Decodificacao de enables ************************/
 // Faixas explicitas (antes: <= 0x200 e >= 0x300, sem limite superior).
@@ -129,9 +147,11 @@ wire [2:0] wfinal_select;
 assign wfinal_select = wis_jal ? 3'b010 : (_mem_to_reg ? 3'b001 : 3'b000);
 
 wire [31:0] wfinal_value;
+assign mem_or_rom_data = rom_load ? rom_output : _mem_output;
+
 multiplexer3 valor_final(
                             .in1(ULA_result),
-                            .in2(_mem_output),
+                            .in2(mem_or_rom_data),
                             .in3(wjal_current_inst),
                             .select(wfinal_select),
                             .out(wfinal_value)
