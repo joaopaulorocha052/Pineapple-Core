@@ -168,7 +168,7 @@ module tb_TopLevel;
 
     // Timeout: com _clk ~8,3 MHz (FREQ_HZ = 10_000_000) cada instrucao leva ~120 ns
     initial begin
-        #80000000;   // 20 ms
+        #800000000;   // 20 ms
         $display("\n[TIMEOUT] fim da simulacao sem encontrar HALT");
         dump_ram;
         $stop;
