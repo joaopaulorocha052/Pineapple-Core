@@ -59,7 +59,7 @@ module TopLevel (
 
     wire[9:0] lcd_instruction;
     wire enable_lcd;
-    LCD_CONTROLLER lcd(.clk(CLOCK_50), .reset(V_SW[10]), .input_data(_extended_input), .output_data(_bcd), .en(enable_lcd), .lcd_instruction_bus(lcd_instruction));
+    LCD_CONTROLLER lcd(.clk(CLOCK_50), .reset(V_SW[10]), .input_data(_extended_input), .output_data(_output), .en(enable_lcd), .lcd_instruction_bus(lcd_instruction));
     // Mapeamento corrigido baseado na nova pinagem de 14 bits:
     assign LCD_BUS = {
         1'b1,                  // LCD_BUS[12] -> L6 (Luz acesa)

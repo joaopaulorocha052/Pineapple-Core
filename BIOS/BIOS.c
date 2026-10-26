@@ -3,12 +3,12 @@ int post(void){
     int i;
     i = 1;
 
-    osAddress = 0;
-    osLength = 256;
+    osAddress = 1536;
+    osLength = 38;
     return i;
 }
 
-void biosPanic(){
+void biosPanic(void){
     panicMode = 1;
 }
 
@@ -23,11 +23,13 @@ int loadOs(int baseAddress, int size){
         wordIndex = wordIndex + 1;
     }
 
+    return 1;
 
 }
 
 void main(void){
     int state;
+
 
     if(post() < 1){
         state = 9999;
@@ -37,4 +39,6 @@ void main(void){
         state = 9998;
         biosPanic();
     }
+
+    swJump(0);
 }

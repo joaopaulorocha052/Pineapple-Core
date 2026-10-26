@@ -110,9 +110,9 @@ wire [31:0] rom_output, rom_offset, mem_or_rom_data;
 
 assign rom_offset = ULA_result - HDD_BASE;
 
-rom #(.ADDR_WIDTH(10), .MIF_FILE_PATH("HD.mif")) u_hd (
+rom #(.ADDR_WIDTH(10), .MIF_FILE_PATH("HD.txt")) u_hd (
                                                     .addr(rom_offset),
-                                                    .clk(CLOCK_50),
+                                                    .clk(_mem_clock),
                                                     .q(rom_output)
                                                         );
 

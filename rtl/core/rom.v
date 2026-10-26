@@ -2,7 +2,7 @@
 // Single Port ROM
 
 module rom
-#(parameter DATA_WIDTH=32, parameter ADDR_WIDTH=8, parameter MIF_FILE_PATH = "BIOS.mif")
+#(parameter DATA_WIDTH=32, parameter ADDR_WIDTH=8, parameter MIF_FILE_PATH = "BIOS.txt")
 (
 	input [(ADDR_WIDTH-1):0] addr,
 	input clk, 
@@ -10,7 +10,7 @@ module rom
 );
 
 	// Declare the ROM variable
-	(* ram_init_file = MIF_FILE_PATH *) reg [DATA_WIDTH-1:0] rom[2**ADDR_WIDTH-1:0];
+	/*(* ram_init_file = MIF_FILE_PATH *)*/  reg [DATA_WIDTH-1:0] rom[2**ADDR_WIDTH-1:0];
 
 	// Initialize the ROM with $readmemb.  Put the memory contents
 	// in the file single_port_rom_init.txt.  Without this file,
@@ -19,7 +19,9 @@ module rom
 	// See Verilog LRM 1364-2001 Section 17.2.8 for details on the
 	// format of this file, or see the "Using $readmemb and $readmemh"
 	// template later in this section.
-
+	 initial begin
+	 	$readmemb(MIF_FILE_PATH, rom);
+	 end
 	always @ (posedge clk)
 	begin
 		q <= rom[addr];
