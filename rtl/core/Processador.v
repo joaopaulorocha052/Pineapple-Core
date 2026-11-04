@@ -1,4 +1,4 @@
-module Processador (CLOCK_50, _mem_clock,teste, reset, halt_flag, reset_config_flag, input_value, output_value, config_value, teste_end, teste, input_debug, teste_apocal, sp_test, fp_test);
+module Processador (CLOCK_50, _mem_clock,teste, reset, halt_flag, reset_config_flag, input_value, output_value, config_value, teste_end, teste, input_debug, teste_apocal, sp_test, fp_test, output_strobe);
 
 // `include "../params/opcodes.vh"
 
@@ -35,8 +35,11 @@ input [31:0] input_value;
 output [31:0] output_value, config_value, teste, input_debug, teste_apocal, sp_test, fp_test;
 wire wreg_write, wram_write, _mem_to_reg, wis_jal;
 output [9:0] teste_end;
+output output_strobe;
 
 
+
+assign output_strobe = wreg_write && (wdest == 1);
 
 wire [8:0] fetch_local_addr;
 wire [31:0] bios_instruction, iram_instruction;
@@ -110,7 +113,7 @@ wire [31:0] rom_output, rom_offset, mem_or_rom_data;
 
 assign rom_offset = ULA_result - HDD_BASE;
 
-rom #(.ADDR_WIDTH(10), .MIF_FILE_PATH("HD.txt")) u_hd (
+rom #(.ADDR_WIDTH(10), .MIF_FILE_PATH("HD.mif")) u_hd (
                                                     .addr(rom_offset),
                                                     .clk(_mem_clock),
                                                     .q(rom_output)

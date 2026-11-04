@@ -23,12 +23,13 @@ module TopLevel (
      `ifdef DEBUG_MODE
         FrequencyDivider #(.FREQ_HZ(100)) fdiv (.in_clk(CLOCK_50), .out_clk(_clk), .en(V_SW[0]));
     `else
-        FrequencyDivider #(.FREQ_HZ(10_000_000)) fdiv (.in_clk(CLOCK_50), .out_clk(_clk), .en(V_SW[0]));
+        FrequencyDivider #(.FREQ_HZ(5_000)) fdiv (.in_clk(CLOCK_50), .out_clk(_clk), .en(V_SW[0]));
     `endif
 
 
     FrequencyDivider #(.FREQ_HZ(500)) LcdClockDriver (.in_clk(CLOCK_50), .out_clk(_lcd_clock), .en(1));
 
+    wire _output_strobe;
     IO IoModule (.clk(_clk),
                   .output_value_register(_output),
                   .input_value_register(_input),
@@ -39,7 +40,8 @@ module TopLevel (
                   .input_value(lixo), 
                   .output_value(output_pins),
                   .reset(V_SW[1]),
-                  .reset_config_flag(_reset_config_flag)
+                  .reset_config_flag(_reset_config_flag),
+                  .output_strobe(_output_strobe)
                   );
    SignExtend extends_input_value(.imediato(V_SW[3:9]), .imediato_extendido(_extended_input));
 
@@ -54,7 +56,8 @@ module TopLevel (
                      .output_value(_output),
                      .reset_config_flag(_reset_config_flag),
                      .teste_end(_teste_end),
-                     .input_debug(G_LEDR[0:5])
+                     .input_debug(G_LEDR[0:5]),
+                     .output_strobe(_output_strobe)
                      );
 
     wire[9:0] lcd_instruction;
