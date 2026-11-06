@@ -25,6 +25,6 @@ with open(sys.argv[1], 'w') as mif_file:
                 address_count += 1
 
 
-    if(address_count != total_memory_size):
+    if(address_count < int(total_memory_size)):
         mif_file.write(f" [{int(address_count)+1}..{int(total_memory_size)-1}] : {32 * '0'};\n")
     mif_file.write("END;")

@@ -8,4 +8,9 @@
     // Bus width
     `define INST_ADDR_WIDTH 10
 
+
+
+    //Default Quantum
+    `DEFUALT_QUANTUM 20
+
 `endif
