@@ -33,6 +33,7 @@ always @ (posedge clock or posedge reset) begin
           5'b00001: destino_instrucao <=  end_jump; //Tipo J - end (JUMP comum E JR, ver unidade_de_controle.v: JR usa instr_type=5'b00001 tambem -- end_jump aqui ja recebe wjump_val, que o Processador.v ja seleciona corretamente entre o imediato e ula_1 via wis_jr)
           5'b00011: destino_instrucao <= end_jump; //BEQ caso seja igual
           5'b11111: destino_instrucao <= destino_instrucao;
+          5'b11110: destino_instrucao <= 10'h2FF;   // interrupção: vai ao vetor
 			    5'b00100: destino_instrucao <= end_jump;
           default: destino_instrucao <= destino_instrucao + 9'b1; //Tipo R
         endcase  

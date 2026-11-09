@@ -8,13 +8,15 @@
 ******************************************************************/
 
 module registradores(
-    src1, src2, dest, wrt_data, out1, out2, clk, reg_write, input_value, output_value, config_value, input_debug, sp, fp
+    src1, src2, dest, wrt_data, out1, out2, clk, reg_write, input_value, output_value, config_value, input_debug, sp, fp, irq_take, irq_pc
 );
 
 
 input [4:0] src1, src2, dest;
 input [31:0] wrt_data, input_value;
 input clk, reg_write;
+input irq_take;
+input [31:0] irq_pc;
 
 output [31:0] out1, out2, output_value, config_value, input_debug, sp, fp;
 // voltar para 32 registradores
@@ -31,6 +33,7 @@ initial
 always @(posedge clk ) begin
     if(reg_write) 
         registers[dest] <= wrt_data;
+    if (irq_take) registers[27] <= irq_pc;   // a última atribuição vence
     registers[2] <= input_value;
 
 end

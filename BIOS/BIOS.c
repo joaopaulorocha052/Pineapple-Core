@@ -4,7 +4,7 @@ int post(void){
     i = 1;
 
     osAddress = 1536;
-    osLength = 50;
+    osLength = 255;
     return i;
 }
 

@@ -52,6 +52,7 @@ module tb_TopLevel;
     integer i;
     integer INPUT_ARRAY [0:10];
     initial i = 0;
+    initial #1 $display("rom[255] = %h", DUT.CPU.u_bios.rom[255]);   // esperado: 0800001b
 
     initial begin
         INPUT_ARRAY[0] = 16;
@@ -111,6 +112,23 @@ module tb_TopLevel;
             $display("%0t [LW]     PC=0x%03h addr=0x%03h -> dest=R%0d dado=0x%h",
                      $time, DUT.CPU.end_instrucao, DUT.CPU.ULA_result,
                      DUT.CPU.wdest, DUT.CPU._mem_output);
+
+    always @(posedge DUT.CPU.CLOCK_50)
+    if (DUT.CPU.irq_take)
+        $display("%0t [IRQ] PC=0x%03h instr=0x%08h R27=0x%08h",
+                 $time, DUT.CPU.end_instrucao, DUT.CPU.instrucao,
+                 DUT.CPU.registradores.registers[27]);
+
+        integer win = 0;
+    always @(posedge DUT.CPU.CLOCK_50) begin
+        if (DUT.CPU.irq_take) win = 8;
+        if (win > 0) begin
+            $display("%0t pc=0x%03h instr=0x%08h R27=0x%08h halt=%b", $time,
+                    DUT.CPU.end_instrucao, DUT.CPU.instrucao,
+                    DUT.CPU.registradores.registers[27], DUT.CPU.halt_flag);
+            win = win - 1;
+        end
+    end
 
     // Saltos: JUMP / JAL / JR (o JR mostra o RA lido do registrador)
     always @(posedge DUT.CPU.CLOCK_50)

@@ -1,7 +1,7 @@
 `include "constants.vh"
 
 module timer #(
-    parameter MAX_COUNT=200
+    parameter MAX_COUNT=5
 ) (
     input clk, en, reset, clear,
     output reg timeout_flag

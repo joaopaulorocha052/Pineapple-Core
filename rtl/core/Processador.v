@@ -38,6 +38,9 @@ output [9:0] teste_end;
 output output_strobe;
 
 
+wire wreg_write_ctl, wram_write_ctl, irq_take;
+wire [4:0] _inst_type_h;
+
 
 assign output_strobe = wreg_write && (wdest == 1);
 
@@ -52,7 +55,7 @@ addr_decoder fetch_instr_decoder(.instr_address(end_instrucao),
                                 );
 
 unidade_de_controle control(.instrucao(instrucao), 
-                            .reg_write(wreg_write), 
+                            .reg_write(wreg_write_ctl), 
                             .select(wselect), 
                             .dest(wdest), 
                             .src1(wsrc1), 
@@ -63,7 +66,7 @@ unidade_de_controle control(.instrucao(instrucao),
                             .i_jump(wi_jump),
                             .sign_extend(wsign_extend),
                             .extended_immediate(wim),
-                            .ram_write(wram_write),
+                            .ram_write(wram_write_ctl),
                             .mem_to_reg(_mem_to_reg),
 							.is_jal(wis_jal)
                             );
@@ -82,7 +85,7 @@ wire [4:0] _inst_type;
 multiplexer2 halt_check(.in1(wpc_mult_select),
                         .in2(5'b11111),
                         .select(halt_flag),
-                        .out(_inst_type)
+                        .out(_inst_type_h)
 );
 
 wire wis_jr;
@@ -96,6 +99,20 @@ multiplexer2 reg_or_im(
 								.select(wis_jr),
 								.out(wjump_val)
 );
+
+
+assign wreg_write = wreg_write_ctl & ~irq_take;   
+assign wram_write = wram_write_ctl & ~irq_take;
+assign _inst_type = irq_take ? 5'b11110 : _inst_type_h;
+
+timer #(.MAX_COUNT(5)) u_timer (
+    .clk(CLOCK_50), .reset(reset),
+    .en(~halt_flag & ~end_instrucao[9]),   
+    .clear(irq_take),
+    .timeout_flag(irq_take)
+);
+
+
 pc pc(.end_jump(wjump_val), 
 		.i_jump(5'b0), //jump instr
 		.tipo(_inst_type), 
@@ -113,7 +130,7 @@ wire [31:0] rom_output, rom_offset, mem_or_rom_data;
 
 assign rom_offset = ULA_result - HDD_BASE;
 
-rom #(.ADDR_WIDTH(10), .MIF_FILE_PATH("HD.mif")) u_hd (
+rom #(.ADDR_WIDTH(10), .MIF_FILE_PATH("HD.txt")) u_hd (
                                                     .addr(rom_offset),
                                                     .clk(_mem_clock),
                                                     .q(rom_output)
@@ -173,7 +190,9 @@ registradores registradores(.src1(wsrc1), //1
                             .config_value(config_value),
                             .input_debug(input_debug),
 							.sp(sp_test),
-							.fp(fp_test)
+							.fp(fp_test),
+                            .irq_take(irq_take), 
+                            .irq_pc({22'b0, end_instrucao})
                             );
 									 
 
